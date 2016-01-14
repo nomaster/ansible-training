@@ -1,0 +1,15 @@
+---
+
+- name: Install Wordpress DB
+  hosts: db
+  become: yes
+  become_user: root
+  roles:
+  - wordpress-db
+
+- name: Install Wordpress Web
+  hosts: web
+  become: yes
+  become_user: root
+  roles:
+  - wordpress-app

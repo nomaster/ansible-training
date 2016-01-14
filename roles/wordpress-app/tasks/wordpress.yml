@@ -1,0 +1,30 @@
+---
+
+- name: Install requirements
+  apt: name={{ item }} state=present
+  with_items:
+  - mysql-client 
+  - php5-mysql
+
+- name: Download Wordpress
+  get_url: url={{ wordpress.url }} checksum={{ wordpress.checksum }} dest={{ wordpress.archive }}
+  register: download
+
+- name: Unarchive Wordpress
+  unarchive: src={{ wordpress.archive }} dest=/var/ copy=no
+  when: download | changed
+
+- name: Configure Wordpress
+  template: src=wordpress-config.php dest={{ wordpress.prefix }}/wp-config.php
+
+- name: Configure nginx site
+  template: src=nginx-wordpress dest=/etc/nginx/sites-available/wordpress
+  notify: Restart nginx
+
+- name: Disable default nginx site
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+  notify: Restart nginx
+
+- name: Enable Wordpress nginx site
+  file: dest=/etc/nginx/sites-enabled/wordpress src=../sites-available/wordpress state=link
+  notify: Restart nginx

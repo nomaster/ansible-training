@@ -1,0 +1,7 @@
+---
+
+- name: Install packages
+  apt: name=php5-fpm state=present
+
+- name: Enable service
+  service: name=php5-fpm enabled=yes state=started

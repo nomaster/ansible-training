@@ -1,0 +1,20 @@
+---
+
+- name: Install packages
+  apt: name=mysql-server state=present
+
+- name: Configure networking
+  template: src=mysql-network.conf dest=/etc/mysql/conf.d/network.cnf
+  notify: Restart MySQL
+
+- name: Enable services
+  service: name=mysql state=started enabled=yes
+
+- name: Install requirements
+  apt: name=python-mysqldb state=present
+
+- name: Create database
+  mysql_db: name=wordpress state=present
+
+- name: Create user
+  mysql_user: name=wordpress host="%" priv=wordpress.*:ALL state=present password="wordpress"

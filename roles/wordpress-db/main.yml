@@ -1,0 +1,11 @@
+---
+
+- name: Install packages
+  apt: name=mysql-server state=present
+
+- name: Configure networking
+  template: src=mysql-network.conf dest=/etc/mysql/conf.d/network.cnf
+  notify: Restart MySQL
+
+- name: Enable services
+  service: name=mysql state=started enabled=yes
