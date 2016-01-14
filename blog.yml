@@ -19,4 +19,4 @@
   become: yes
   become_user: root
   roles:
-  - cdn-server
+  - geerlingguy.varnish

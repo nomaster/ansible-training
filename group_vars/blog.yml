@@ -4,3 +4,6 @@ blog:
   db_name: wordpress
   db_user: wordpress
   db_password: ultrasecrect
+
+varnish_default_backend_host: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+varnish_default_backend_port: "80"

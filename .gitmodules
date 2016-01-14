@@ -1,0 +1,3 @@
+[submodule "roles/geerlingguy.varnish"]
+	path = roles/geerlingguy.varnish
+	url = https://github.com/geerlingguy/ansible-role-varnish
