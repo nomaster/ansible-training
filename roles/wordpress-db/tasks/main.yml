@@ -14,7 +14,7 @@
   apt: name=python-mysqldb state=present
 
 - name: Create database
-  mysql_db: name=wordpress state=present
+  mysql_db: name={{ blog.db_name }} state=present
 
 - name: Create user
-  mysql_user: name=wordpress host="%" priv=wordpress.*:ALL state=present password="wordpress"
+  mysql_user: name={{ blog.db_user }} host="%" priv={{ blog.db_name }}.*:ALL state=present password="{{ blog.db_password }}"

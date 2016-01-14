@@ -1,8 +1,8 @@
 <?php
 
-define('DB_NAME', 'wordpress');
-define('DB_USER', 'wordpress');
-define('DB_PASSWORD', 'wordpress');
+define('DB_NAME', '{{ blog.db_name }}');
+define('DB_USER', '{{ blog.db_user }}');
+define('DB_PASSWORD', '{{ blog.db_password }}');
 define('DB_HOST', '{{ hostvars['db']['ansible_eth1']['ipv4']['address'] }}');
 define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
