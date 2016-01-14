@@ -1,5 +1,4 @@
 ---
 
-- include: nginx.yml
 - include: php.yml
 - include: wordpress.yml
