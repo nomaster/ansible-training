@@ -11,7 +11,7 @@
     apt: name=nginx state=present
 
   - name: Enable services
-    service: name=nginx enabled=yes state=started
+    service: name=nginx enabled=yes
 
   - name: Copy index html file
     template: src=index.html dest=/usr/share/nginx/html/
@@ -82,7 +82,10 @@
   tasks:
 
   - name: Install requirements
-    apt: name=mysql-client state=present
+    apt: name={{ item }} state=present
+    with_items:
+    - mysql-client 
+    - php5-mysql
 
   - name: Download Wordpress
     get_url:
@@ -96,10 +99,18 @@
     when: download | changed
 
   - name: Configure Wordpress
-    template: src=wordpress-config.php dest=/var/wordpress/config.php
+    template: src=wordpress-config.php dest=/var/wordpress/wp-config.php
 
   - name: Configure nginx site
-    template: src=nginx-wordpress dest=/etc/nginx/sites-enabled/wordpress
+    template: src=nginx-wordpress dest=/etc/nginx/sites-available/wordpress
+    notify: Restart nginx
+
+  - name: Disable default nginx site
+    file: dest=/etc/nginx/sites-enabled/default state=absent
+    notify: Restart nginx
+
+  - name: Enable Wordpress nginx site
+    file: dest=/etc/nginx/sites-enabled/wordpress src=../sites-available/wordpress state=link
     notify: Restart nginx
 
   handlers:
