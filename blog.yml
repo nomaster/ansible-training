@@ -13,3 +13,10 @@
   become_user: root
   roles:
   - wordpress-app
+
+- name: Install CDN server
+  hosts: cdn
+  become: yes
+  become_user: root
+  roles:
+  - cdn-server

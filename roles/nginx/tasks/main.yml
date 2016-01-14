@@ -3,6 +3,13 @@
 - name: Install packages
   apt: name=nginx state=present
 
+- name: Configure nginx
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  notify: Restart nginx
+
+- name: Create nginx cache directory
+  file: dest=/var/cache/nginx owner=www-data state=directory mode=go-rwx
+
 - name: Enable services
   service: name=nginx enabled=yes
 

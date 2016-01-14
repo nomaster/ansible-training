@@ -1,0 +1,13 @@
+---
+
+- name: Configure nginx site
+  template: src=wordpress-cdn dest=/etc/nginx/sites-available/wordpress-cdn
+  notify: Restart nginx
+
+- name: Disable default nginx site
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+  notify: Restart nginx
+
+- name: Enable Wordpress CDN nginx site
+  file: dest=/etc/nginx/sites-enabled/wordpress-cdn src=../sites-available/wordpress-cdn state=link
+  notify: Restart nginx

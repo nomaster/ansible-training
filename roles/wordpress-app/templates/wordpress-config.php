@@ -11,6 +11,8 @@ define('WP_DEBUG', false);
 
 define('AUTH_KEY','{{ lookup('password', 'wp_auth_key', length='64') }}');
 
+define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . ':8080' );
+
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
 
