@@ -1,0 +1,7 @@
+---
+
+- name: investigate user behaviour
+  hosts: default
+  tasks:
+  - name: count users with bash as their default shell
+    shell: "cat /etc/passwd | grep bash | wc -l"

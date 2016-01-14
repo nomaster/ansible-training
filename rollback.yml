@@ -1,0 +1,9 @@
+---
+
+- name: delete test environment
+  hosts: default
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete user
+    user: name=test state=absent

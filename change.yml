@@ -1,0 +1,19 @@
+---
+
+- name: investigate user behaviour
+  hosts: default
+  gather_facts: no
+  tasks:
+  - name: count users with bash as their default shell
+    shell: "cat /etc/passwd | grep bash | wc -l"
+    register: count
+    changed_when: False
+  - debug: var=count.stdout
+
+- name: create test environment
+  hosts: default
+  become: yes
+  become_user: root
+  tasks:
+  - name: create user
+    user: name=test state=present

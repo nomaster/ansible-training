@@ -1,0 +1,108 @@
+---
+
+- name: Install webservers
+  hosts: web
+  become: yes
+  become_user: root
+
+  tasks:
+
+  - name: Install packages
+    apt: name=nginx state=present
+
+  - name: Enable services
+    service: name=nginx enabled=yes state=started
+
+  - name: Copy index html file
+    template: src=index.html dest=/usr/share/nginx/html/
+
+  - name: Get cat
+    get_url: 
+      url: "https://upload.wikimedia.org/wikipedia/commons/8/83/Neugierige-Katze.JPG"
+      dest: /usr/share/nginx/html/cat.jpg
+      checksum: "sha256:a32c38ceee2959db5adf339d598262db911d25f7a391df3974f8f7d7cf11efc4"
+
+- name: Install PHP
+  hosts: web
+  become: yes
+  become_user: root
+
+  tasks:
+  
+  - name: Install packages
+    apt: name=php5-fpm state=present
+
+  - name: Enable service
+    service: name=php5-fpm enabled=yes state=started
+
+- name: Install dbms
+  hosts: db
+  become: yes
+  become_user: root
+
+  tasks:
+
+  - name: Install packages
+    apt: name=mysql-server state=present
+
+  - name: Configure networking
+    template: src=mysql-network.conf dest=/etc/mysql/conf.d/network.cnf
+    notify: Restart MySQL
+
+  - name: Enable services
+    service: name=mysql state=started enabled=yes
+
+  handlers:
+
+  - name: Restart MySQL
+    service: name=mysql state=restarted
+
+- name: Initialize Wordpress database
+  hosts: db
+  become: yes
+  become_user: root
+
+  tasks:
+
+  - name: Install requirements
+    apt: name=python-mysqldb state=present
+
+  - name: Create database
+    mysql_db: name=wordpress state=present
+
+  - name: Create user
+    mysql_user: name=wordpress host="%" priv=wordpress.*:ALL state=present password="wordpress"
+
+
+- name: Do the Wordpress
+  hosts: web
+  become: yes
+  become_user: root
+
+  tasks:
+
+  - name: Install requirements
+    apt: name=mysql-client state=present
+
+  - name: Download Wordpress
+    get_url:
+      url: https://wordpress.org/wordpress-4.4.1.tar.gz
+      checksum: "sha1:89bcc67a33aecb691e879c818d7e2299701f30e7"
+      dest: /root/wordpress.tar.gz
+    register: download
+
+  - name: Unarchive Wordpress
+    unarchive: src=/root/wordpress.tar.gz dest=/var/ copy=no
+    when: download | changed
+
+  - name: Configure Wordpress
+    template: src=wordpress-config.php dest=/var/wordpress/config.php
+
+  - name: Configure nginx site
+    template: src=nginx-wordpress dest=/etc/nginx/sites-enabled/wordpress
+    notify: Restart nginx
+
+  handlers:
+    
+  - name: Restart nginx
+    service: name=nginx state=restarted

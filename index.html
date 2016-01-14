@@ -1,0 +1,17 @@
+<html>
+<body>
+<h1>Under construction</h1>
+<p>Hier gibt es nichts zu sehen. Bitte gehen Sie weiter!</p>
+<h1>IPs</h1>
+<ul>
+{% for address in ansible_all_ipv6_addresses %}
+<li>{{ address }}</li>
+{% endfor %}
+</ul>
+<hr />
+<p>
+{{ ansible_managed }}
+</p>
+<img src="cat.jpg" alt="Katze!" width="100%" />
+</body>
+</html>
