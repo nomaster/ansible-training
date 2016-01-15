@@ -15,6 +15,14 @@
 
 - name: Create database
   mysql_db: name={{ blog.db_name }} state=present
+  register: createdb
+
+- name: Copy database dump
+  copy: src=wordpress.sql dest=/var/tmp/wordpress.sql mode=go-rwx owner=root
+
+- name: Import database dump
+  mysql_db: name={{ blog.db_name }} state=import target=/var/tmp/wordpress.sql
+  when: createdb.changed
 
 - name: Create user
   mysql_user: name={{ blog.db_user }} host="%" priv={{ blog.db_name }}.*:ALL state=present password="{{ blog.db_password }}"
