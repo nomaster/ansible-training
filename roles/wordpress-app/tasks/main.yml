@@ -2,3 +2,10 @@
 
 - include: php.yml
 - include: wordpress.yml
+
+- name: Set installation fact
+  ini_file:
+    dest: /etc/ansible/facts.d/installation.fact
+    section: wordpress
+    option: version
+    value: "{{ wordpress.version }}"

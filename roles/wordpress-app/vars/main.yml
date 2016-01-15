@@ -1,6 +1,7 @@
 ---
 
 wordpress:
+  version: "4.4.1"
   url: https://wordpress.org/wordpress-4.4.1.tar.gz
   checksum: "sha1:89bcc67a33aecb691e879c818d7e2299701f30e7"
   archive: /root/wordpress.tar.gz
